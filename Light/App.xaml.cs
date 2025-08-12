@@ -8,12 +8,20 @@ using Light.NavigationServices;
 using Light.Pages;
 using Light.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+
+
+using Td = Telegram.Td;
+using TdApi = Telegram.Td.Api;
+
 
 namespace Light
 {
@@ -135,7 +143,8 @@ namespace Light
                         break;
                     case AuthorizationStateType.Ready:
                         // TODO: Перейти в главное приложение
-                        _rootFrame.Content = new LightStartPage();
+                        _ = LoadAsync();
+
                         break;
 
                     default:
@@ -146,6 +155,26 @@ namespace Light
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Ошибка обработки состояния авторизации: {ex.Message}");
+            }
+        }
+
+        private async Task LoadAsync()
+        {
+            var handler = new AuthorizationRequestHandler();
+            var request = new TdApi.LoadChats { Limit = 100 };
+            _synchronizationClient.SendRequest(request, handler);
+
+            var result= await handler.Task;
+            
+            if (result.Result == RequestResultType.Success)
+            {
+                var handler_1 = new AuthorizationRequestHandler();
+                var request_1 = new TdApi.GetChats { Limit = 10 };
+                _synchronizationClient.SendRequest(request, handler);
+
+                var result_1 = await handler.Task;
+
+                _rootFrame.Content = new LightStartPage();
             }
         }
 
