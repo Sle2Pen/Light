@@ -119,10 +119,51 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Commands\AsyncRelayCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="LightAuthorizationRequests\AuthorizationRequest.cs" />
+    <Compile Include="LightAuthorizationRequests\AuthorizationRequestHandler.cs" />
+    <Compile Include="LightAuthorizationRequests\AuthorizationRequests.cs" />
+    <Compile Include="LightAuthorizationRequests\IAuthorizationRequests.cs" />
+    <Compile Include="LightAuthorizationRequests\RequestResult.cs" />
+    <Compile Include="LightAuthorizationStateUpdatesDispatcher\AuthorizationState.cs" />
+    <Compile Include="LightAuthorizationStateUpdatesDispatcher\AuthorizationStateUpdatesDispatcher.cs" />
+    <Compile Include="LightAuthorizationStateUpdatesDispatcher\IAuthorizationStateUpdatesDispatcher.cs" />
+    <Compile Include="LightConnectionUpdatesHandler\ConnectionUpdatesHandler.cs" />
+    <Compile Include="LightInitialApplicationSettings\LightSettings.cs" />
+    <Compile Include="LightSynchronizationClient\ISynchronizationClient.cs" />
+    <Compile Include="LightSynchronizationClient\SynchronizationClient.cs" />
+    <Compile Include="LightSynchronizationServices\AuthorizationUpdatesHandler.cs" />
+    <Compile Include="LightSynchronizationServices\IUpdatesHandler.cs" />
+    <Compile Include="LightSynchronizationServices\NullUpdatesHandler.cs" />
+    <Compile Include="LightSynchronizationServices\UpdatesReceiver.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NavigationServices\ApplicationNavigationService.cs" />
+    <Compile Include="NavigationServices\AuthorizationNavigationService.cs" />
+    <Compile Include="NavigationServices\INavigationService.cs" />
+    <Compile Include="Pages\AuthorizationRootPage.xaml.cs">
+      <DependentUpon>AuthorizationRootPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\CodeInputAuthorizationPage.xaml.cs">
+      <DependentUpon>CodeInputAuthorizationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LightStartPage.xaml.cs">
+      <DependentUpon>LightStartPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PasswordInputAuthorizationPage.xaml.cs">
+      <DependentUpon>PasswordInputAuthorizationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PhoneNumberInputAuthorizationPage.xaml.cs">
+      <DependentUpon>PhoneNumberInputAuthorizationPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AuthorizationRootViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\CodeAuthorizationViewModel.cs" />
+    <Compile Include="ViewModels\PasswordAuthorizationViewModel.cs" />
+    <Compile Include="ViewModels\PhoneNumberAuthorizationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -131,6 +172,7 @@
     <None Include="Light_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\icons8-SendApproveLight-96.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -149,11 +191,39 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\AuthorizationRootPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\CodeInputAuthorizationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LightStartPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\PasswordInputAuthorizationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\PhoneNumberInputAuthorizationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015-2019 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
+    <SDKReference Include="Telegram.Td.UWP, Version=1.0">
+      <Name>TDLib for Universal Windows Platform</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

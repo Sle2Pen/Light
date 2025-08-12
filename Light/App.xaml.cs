@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Light.LightAuthorizationRequests;
+using Light.LightAuthorizationStateUpdatesDispatcher;
+using Light.LightConnectionUpdatesHandler;
+using Light.LightInitialApplicationSettings;
+using Light.LightSynchronizationClient;
+using Light.LightSynchronizationServices;
+using Light.NavigationServices;
+using Light.Pages;
+using Light.ViewModels;
+using System;
+using System.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace Light
@@ -22,6 +22,28 @@ namespace Light
     /// </summary>
     sealed partial class App : Application
     {
+        Frame _rootFrame;
+
+        Page _applicationRoot;
+
+        //ILightApplication _coreApplication;
+
+        INavigationService _authorizedUserNavigationService;
+        //INavigationService _authorizationNavigationService;
+
+
+        ISynchronizationClient _synchronizationClient;
+        UpdatesReceiver _synchronizationUpdatesReceiver;
+
+        IUpdatesHandler _nullUpdatesHandler;
+
+        IUpdatesHandler _connectionUpdatesHandler;
+
+        IUpdatesHandler _authorizationUpdatesHandler;
+        IAuthorizationStateUpdatesDispatcher _authorizationStateUpdatesDispatcher;
+
+        IAuthorizationRequests _authorizationRequests;
+
         /// <summary>
         /// Инициализирует одноэлементный объект приложения.  Это первая выполняемая строка разрабатываемого
         /// кода; поэтому она является логическим эквивалентом main() или WinMain().
@@ -37,41 +59,118 @@ namespace Light
         /// например, если приложение запускается для открытия конкретного файла.
         /// </summary>
         /// <param name="e">Сведения о запросе и обработке запуска.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            _nullUpdatesHandler = new NullUpdatesHandler();
+
+            _connectionUpdatesHandler = new ConnectionUpdatesHandler(_nullUpdatesHandler);//в конце надо будет решить удолить или оставить. скорее оставить - это NullObject 
+
+            _authorizationStateUpdatesDispatcher = new AuthorizationStateUpdatesDispatcher(AuthorizationState.Empty());
+            _authorizationStateUpdatesDispatcher.AuthorizationStateChanged += OnAuthorizationStateChanged;
+
+            _authorizationUpdatesHandler = new AuthorizationUpdatesHandler(
+                _connectionUpdatesHandler,
+                _authorizationStateUpdatesDispatcher);
+
+            _synchronizationUpdatesReceiver = new UpdatesReceiver(
+                SynchronizationContext.Current,
+                _authorizationUpdatesHandler);
+
+            //AppId and AppHash  а лучше AppInfo
+            var appSettings = new LightSettings();
+
+            _synchronizationClient = new SynchronizationClient(
+                appSettings,
+                new CancellationTokenSource(),
+                _synchronizationUpdatesReceiver);
+
+            _synchronizationClient.Run();
+
+            _authorizationRequests = new AuthorizationRequests(_synchronizationClient);
+
+
 
             // Не повторяйте инициализацию приложения, если в окне уже имеется содержимое,
             // только обеспечьте активность окна
-            if (rootFrame == null)
+            if (_rootFrame == null)
             {
                 // Создание фрейма, который станет контекстом навигации, и переход к первой странице
-                rootFrame = new Frame();
+                _rootFrame = new Frame();
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+                _rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Загрузить состояние из ранее приостановленного приложения
                 }
 
-                // Размещение фрейма в текущем окне
-                Window.Current.Content = rootFrame;
+                Window.Current.Content = _rootFrame;
             }
 
             if (e.PrelaunchActivated == false)
             {
-                if (rootFrame.Content == null)
-                {
-                    // Если стек навигации не восстанавливается для перехода к первой странице,
-                    // настройка новой страницы путем передачи необходимой информации в качестве параметра
-                    // параметр
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
-                // Обеспечение активности текущего окна
+                //_authorizationSynchronizationListener.AuthorizationStateChanged += OnAuthorizationStateChanged;
+
                 Window.Current.Activate();
             }
         }
+
+        private void OnAuthorizationStateChanged(object sender, AuthorizationStateChangedEventArgs e)
+        {
+            var state = e.NewState;
+            var authorizationNavigationService = new AuthorizationNavigationService(
+                _rootFrame,
+                _authorizationRequests,
+                _authorizationStateUpdatesDispatcher);
+
+            try
+            {
+                switch (state.StateType)
+                {
+                    case AuthorizationStateType.WaitPhoneNumber:
+                        authorizationNavigationService.Navigate<AuthorizationRootViewModel>();
+                        break;
+                    case AuthorizationStateType.WaitCode:
+                        authorizationNavigationService.Navigate<CodeAuthorizationViewModel>();
+                        break;
+                    case AuthorizationStateType.Ready:
+                        // TODO: Перейти в главное приложение
+                        _rootFrame.Content = new LightStartPage();
+                        break;
+
+                    default:
+                        // Можно логировать другие состояния
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка обработки состояния авторизации: {ex.Message}");
+            }
+        }
+
+        private void SetFrameRootContent(Page rootPage)
+        {
+            _rootFrame.Content = rootPage;
+        }
+
+        private Page CreateApplicationPage(Type viewModelType)
+        {
+            //if (viewModelType ==typeof(ApplicationRootViewModel))
+            //{
+            //    return new ApplicationRootPage(new ApplicationRootViewModel());
+            //}
+            ////else if (viewModelType == typeof(ApplicationRootViewModel))
+            ////{
+            ////    return new ApplicationRootPage(new ApplicationRootViewModel());
+            ////}
+            //else
+            //{
+            throw new Exception("Unknown view model");
+            //}
+        }
+
+
 
         /// <summary>
         /// Вызывается в случае сбоя навигации на определенную страницу
