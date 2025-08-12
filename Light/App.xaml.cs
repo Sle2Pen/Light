@@ -1,12 +1,16 @@
 ﻿using Light.LightAuthorizationRequests;
 using Light.LightAuthorizationStateUpdatesDispatcher;
+using Light.LightChatsRequests;
+using Light.LightChatsUpdatesHandler;
 using Light.LightConnectionUpdatesHandler;
 using Light.LightInitialApplicationSettings;
 using Light.LightSynchronizationClient;
 using Light.LightSynchronizationServices;
+using Light.LightUserUpdatesHandler;
 using Light.NavigationServices;
 using Light.Pages;
 using Light.ViewModels;
+using LightApplication.LightChatsUpdatesDispatcher;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,6 +49,10 @@ namespace Light
 
         IUpdatesHandler _nullUpdatesHandler;
 
+        IUpdatesHandler _chatsUpdatesHandler;
+        IChatsUpdatesDispatcher _chatsUpdatesDispatcher;
+
+        IUpdatesHandler _userUpdatesHandler;
         IUpdatesHandler _connectionUpdatesHandler;
 
         IUpdatesHandler _authorizationUpdatesHandler;
@@ -67,11 +75,17 @@ namespace Light
         /// например, если приложение запускается для открытия конкретного файла.
         /// </summary>
         /// <param name="e">Сведения о запросе и обработке запуска.</param>
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             _nullUpdatesHandler = new NullUpdatesHandler();
 
-            _connectionUpdatesHandler = new ConnectionUpdatesHandler(_nullUpdatesHandler);//в конце надо будет решить удолить или оставить. скорее оставить - это NullObject 
+            _chatsUpdatesDispatcher = new ChatsUpdatesDispatcher();
+            _chatsUpdatesHandler = new ChatsUpdatesHandler(
+                _chatsUpdatesDispatcher,
+                _nullUpdatesHandler);
+
+            _userUpdatesHandler = new UserUpdatesHandler(_chatsUpdatesHandler);
+            _connectionUpdatesHandler = new ConnectionUpdatesHandler(_userUpdatesHandler);//в конце надо будет решить удолить или оставить. скорее оставить - это NullObject 
 
             _authorizationStateUpdatesDispatcher = new AuthorizationStateUpdatesDispatcher(AuthorizationState.Empty());
             _authorizationStateUpdatesDispatcher.AuthorizationStateChanged += OnAuthorizationStateChanged;
@@ -118,8 +132,8 @@ namespace Light
             if (e.PrelaunchActivated == false)
             {
                 //_authorizationSynchronizationListener.AuthorizationStateChanged += OnAuthorizationStateChanged;
-
                 Window.Current.Activate();
+
             }
         }
 
@@ -142,6 +156,7 @@ namespace Light
                         authorizationNavigationService.Navigate<CodeAuthorizationViewModel>();
                         break;
                     case AuthorizationStateType.Ready:
+                        _rootFrame.Content = new LightStartupLoadingPage();
                         // TODO: Перейти в главное приложение
                         _ = LoadAsync();
 
@@ -161,20 +176,38 @@ namespace Light
         private async Task LoadAsync()
         {
             var handler = new AuthorizationRequestHandler();
-            var request = new TdApi.LoadChats { Limit = 100 };
+            var request = new TdApi.LoadChats
+            {
+                ChatList = new TdApi.ChatListMain(),
+                Limit = 100
+            };
+
             _synchronizationClient.SendRequest(request, handler);
 
             var result= await handler.Task;
             
             if (result.Result == RequestResultType.Success)
             {
-                var handler_1 = new AuthorizationRequestHandler();
-                var request_1 = new TdApi.GetChats { Limit = 10 };
-                _synchronizationClient.SendRequest(request, handler);
+                var getChatsHandler = new GetChatsRequestHandler();
+                var getChatsRequest = new TdApi.GetChats { Limit = 50 };
+                _synchronizationClient.SendRequest(getChatsRequest, getChatsHandler);
 
-                var result_1 = await handler.Task;
+                var getChatsResult = await getChatsHandler.Task;
+                var list = new List<DebugChatDto>();
 
-                _rootFrame.Content = new LightStartPage();
+                foreach (var item in getChatsResult.IdCollection)
+                {
+                    var getChatInfoHandler = new GetChatRequestHandler();
+                    var getChatRequest = new TdApi.GetChat { ChatId=item };
+
+                    _synchronizationClient.SendRequest(getChatRequest, getChatInfoHandler);
+
+                    var getChatResult = await getChatInfoHandler.Task;
+
+                    list.Add(getChatResult);
+                }
+
+                _rootFrame.Content = new LightStartPage(list);
             }
         }
 
