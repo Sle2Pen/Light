@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LightApplication.LightChatsUpdatesDispatcher
+namespace LightApplication.LightChatlistUpdatesDispatcher
 {
-    public class ChatContentUpdate<TContent>
+    public class ChatPreviewContentUpdate<TContent>
     {
         public long ChatId { get; set; }
         public TContent Content { get; set; }

@@ -1,5 +1,5 @@
 ﻿using Light.LightSynchronizationServices;
-using LightApplication.LightChatsUpdatesDispatcher;
+using LightApplication.LightChatlistUpdatesDispatcher;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,14 +12,14 @@ namespace Light.LightChatsUpdatesHandler
 {
     public class ChatsUpdatesHandler : IUpdatesHandler
     {
-        private readonly IChatsUpdatesDispatcher _chatsUpdatesDispatcher;
+        private readonly IChatlistUpdatesDispatcher _chatlistUpdatesDispatcher;
         private readonly IUpdatesHandler _nextUpdatesHandler;
 
         public ChatsUpdatesHandler(
-            IChatsUpdatesDispatcher chatsUpdatesDispatcher, 
+            IChatlistUpdatesDispatcher chatlistUpdatesDispatcher, 
             IUpdatesHandler nextUpdatesHandler)
         {
-            _chatsUpdatesDispatcher = chatsUpdatesDispatcher;
+            _chatlistUpdatesDispatcher = chatlistUpdatesDispatcher;
             _nextUpdatesHandler = nextUpdatesHandler;
 
             if (nextUpdatesHandler != null)

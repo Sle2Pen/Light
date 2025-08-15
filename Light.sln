@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Light.Core", "Light.Core", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Light.Domain", "Light.Domain", "{E2EFD2A0-3AA7-46BC-ADD3-D2AF30EFD02E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightApplication", "LightApplication\LightApplication.csproj", "{AA3B8B65-BF78-4368-BE19-A9B8B78E4585}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightApplication", "LightApplication\LightApplication.csproj", "{AA3B8B65-BF78-4368-BE19-A9B8B78E4585}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

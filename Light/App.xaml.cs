@@ -10,7 +10,7 @@ using Light.LightUserUpdatesHandler;
 using Light.NavigationServices;
 using Light.Pages;
 using Light.ViewModels;
-using LightApplication.LightChatsUpdatesDispatcher;
+using LightApplication.LightChatlistUpdatesDispatcher;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,7 +50,7 @@ namespace Light
         IUpdatesHandler _nullUpdatesHandler;
 
         IUpdatesHandler _chatsUpdatesHandler;
-        IChatsUpdatesDispatcher _chatsUpdatesDispatcher;
+        IChatlistUpdatesDispatcher _chatlistUpdatesDispatcher;
 
         IUpdatesHandler _userUpdatesHandler;
         IUpdatesHandler _connectionUpdatesHandler;
@@ -79,9 +79,9 @@ namespace Light
         {
             _nullUpdatesHandler = new NullUpdatesHandler();
 
-            _chatsUpdatesDispatcher = new ChatsUpdatesDispatcher();
+            _chatlistUpdatesDispatcher = new ChatlistUpdatesDispatcher();
             _chatsUpdatesHandler = new ChatsUpdatesHandler(
-                _chatsUpdatesDispatcher,
+                _chatlistUpdatesDispatcher,
                 _nullUpdatesHandler);
 
             _userUpdatesHandler = new UserUpdatesHandler(_chatsUpdatesHandler);
