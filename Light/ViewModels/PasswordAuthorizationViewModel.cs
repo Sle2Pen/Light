@@ -32,11 +32,7 @@ namespace Light.ViewModels
             SendCommand = new AsyncRelayCommand(SendPasswordAsync);
             GoToRootCommand = new RelayCommand(GoToRoot);
         }
-
-        protected override void InitializeViewModel(object model, Action whenDone)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         private void GoToRoot()
         {
@@ -61,6 +57,11 @@ namespace Light.ViewModels
 
                 ErrorMessage = formattedString;
             }
+        }
+
+        public override Task InitializeAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public string PasswordHint

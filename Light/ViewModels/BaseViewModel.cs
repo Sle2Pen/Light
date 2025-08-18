@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Light.ViewModels
 {
@@ -8,7 +9,7 @@ namespace Light.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected abstract void InitializeViewModel(object model, Action whenDone);
+        public abstract Task InitializeAsync();
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

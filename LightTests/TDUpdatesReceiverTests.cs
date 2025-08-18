@@ -34,6 +34,10 @@ namespace LightTests
         [TestMethod]
         public void PassDataToHandlers_ConditionsNotMetContextIsNull_NothingToDo()
         {
+            TdApi.Message mes = new TdApi.Message();
+            //TdApi.MessageVideo mv;mv.
+            //TdApi.MessagePhoto ph;
+
             SynchronizationContext context = null;
             var handler = new TDFakeUpdatesHandler();
             var updatesReceiver = new UpdatesReceiver(context, handler);

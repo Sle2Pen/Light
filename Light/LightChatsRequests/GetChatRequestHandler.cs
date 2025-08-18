@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TdApi=Telegram.Td.Api;
+using TdApi = Telegram.Td.Api;
 
 namespace Light.LightChatsRequests
 {
-    public class GetChatRequestHandler : GenericRequestHandler<DebugChatDto>
+    public class GetChatRequestHandler : GenericRequestHandler<ChatRequestResult>
     {
         protected override void SetInternalResult(TdApi.BaseObject @object)
         {
@@ -16,21 +12,24 @@ namespace Light.LightChatsRequests
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(chat.LastMessage.Date);
             DateTime dateTime = dateTimeOffset.UtcDateTime.ToLocalTime();
 
-            _result = new DebugChatDto
+            _result = new ChatRequestResult
             {
                 Id = chat.Id,
-                Name = chat.Title,
+                Title = chat.Title,
+                IsContainPhoto=false,
                 LastMessageDate = dateTime.ToString("dd MMMMMMM"),
                 LastMessageTime = dateTime.ToString("HH:mm")
             };
 
-            if (chat.LastMessage is null)
+            if (chat.Photo != null)
             {
-                _result.ContentPreview = string.Empty;
-            }
-            else
-            {
-                _result.ContentPreview = GetLastMessagePreview(chat.LastMessage);
+                _result.IsContainPhoto = true;
+
+                _result.SmallPhotoId = chat.Photo.Small.Id;
+                _result.SmallPhotoPath = chat.Photo.Small.Local.Path;
+
+                _result.RealPhotoId = chat.Photo.Big.Id;
+                _result.RealPhotoPath = chat.Photo.Big.Local.Path;
             }
         }
 

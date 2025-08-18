@@ -68,8 +68,8 @@ namespace Light.ViewModels
                 ErrorMessage = formattedString;
             }
         }
-
-        protected override void InitializeViewModel(object model, Action whenDone)
+        
+        public override Task InitializeAsync()
         {
             throw new NotImplementedException();
         }

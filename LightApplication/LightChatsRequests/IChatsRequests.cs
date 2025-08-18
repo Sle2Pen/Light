@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Light.LightChatsRequests
 {
-    public interface IChatRequests
+    public interface IChatsRequests
     {
-        
+        Task<IEnumerable<ChatRequestResult>> LoadChatsFromTelegramAsync(int offset = 0,int limit = 50);
     }
 }

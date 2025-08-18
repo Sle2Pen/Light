@@ -15,6 +15,8 @@ namespace Light.LightSynchronizationServices
         {
             _synchronizationContext = synchronizationContext;
 
+            //TdApi.UpdateFileAddedToDownloads chat; 
+
             if (updatesHandler != null)
             {
                 _updatesHandler = updatesHandler;

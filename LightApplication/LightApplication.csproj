@@ -5,9 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="LightChatlistUpdater\" />
-    <Folder Include="LightChatlistRequestSender\" />
-    <Folder Include="LightMessageUpdater\" />
+    <ProjectReference Include="..\LightDomain\LightDomain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LightChatsPresentationRepositories\" />
   </ItemGroup>
 
 </Project>

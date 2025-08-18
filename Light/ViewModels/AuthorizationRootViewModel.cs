@@ -1,6 +1,7 @@
 ﻿using Light.Commands;
 using Light.NavigationServices;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Light.ViewModels
@@ -18,13 +19,15 @@ namespace Light.ViewModels
             SelectPhoneNumberAuthorizationCommand = new RelayCommand(SelectPhoneNumberAuthorization);
         }
 
-        protected override void InitializeViewModel(object model, Action whenDone)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public ICommand SelectEmailAuthorizationCommand { get; }
         public ICommand SelectPhoneNumberAuthorizationCommand { get; }
+
+        public override Task InitializeAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         private void SelectEmailAuthorization()
         {

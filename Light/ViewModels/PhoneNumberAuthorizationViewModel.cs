@@ -42,11 +42,7 @@ namespace Light.ViewModels
                 _authorizationNavigationService.Navigate<CodeAuthorizationViewModel>();
             }
         }
-
-        protected override void InitializeViewModel(object model, Action whenDone)
-        {
-
-        }
+        
 
         private void GoToRoot()
         {
@@ -71,6 +67,11 @@ namespace Light.ViewModels
 
                 ErrorMessage = formattedString;
             }
+        }
+
+        public override Task InitializeAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public string InputString

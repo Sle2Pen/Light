@@ -20,11 +20,7 @@ namespace Light.ViewModels
         }
 
         public IEnumerable<string> ApplicationPages { get; set; }
-
-        protected override void InitializeViewModel(object model, Action whenDone)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public ICommand ShowChatsAsync { get; }
         public ICommand ShowMyProfileAsync { get; }
@@ -37,6 +33,11 @@ namespace Light.ViewModels
         private async Task NavigateToMyProfileAsync()
         {
 
+        }
+
+        public override async Task InitializeAsync()
+        {
+            
         }
     }
 }

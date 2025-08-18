@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="LightFilesRequests\FilesRequests.cs" />
     <Compile Include="LightAuthorizationRequests\AuthorizationRequest.cs" />
     <Compile Include="LightAuthorizationRequests\AuthorizationRequestHandler.cs" />
     <Compile Include="LightAuthorizationRequests\AuthorizationRequests.cs" />
@@ -129,15 +130,16 @@
     <Compile Include="LightAuthorizationStateUpdatesDispatcher\AuthorizationState.cs" />
     <Compile Include="LightAuthorizationStateUpdatesDispatcher\AuthorizationStateUpdatesDispatcher.cs" />
     <Compile Include="LightAuthorizationStateUpdatesDispatcher\IAuthorizationStateUpdatesDispatcher.cs" />
-    <Compile Include="LightChatsRequests\ChatRequests.cs" />
+    <Compile Include="LightChatsRequests\ChatsRequests.cs" />
     <Compile Include="LightChatsRequests\ChatsIdsCollectionResult.cs" />
     <Compile Include="LightChatsRequests\DebugChatDto.cs" />
     <Compile Include="LightChatsRequests\GetChatRequestHandler.cs" />
     <Compile Include="LightChatsRequests\GetChatsRequestHandler.cs" />
     <Compile Include="LightChatsRequests\GenericRequestHandler.cs" />
-    <Compile Include="LightChatsRequests\IChatRequests.cs" />
+    <Compile Include="LightChatsRequests\SimpleRequestHandler.cs" />
     <Compile Include="LightChatsUpdatesHandler\ChatsUpdatesHandler.cs" />
     <Compile Include="LightConnectionUpdatesHandler\ConnectionUpdatesHandler.cs" />
+    <Compile Include="LightFileUpdatesHandler\FileUpdatesHandler.cs" />
     <Compile Include="LightInitialApplicationSettings\LightSettings.cs" />
     <Compile Include="LightSynchronizationClient\ISynchronizationClient.cs" />
     <Compile Include="LightSynchronizationClient\SynchronizationClient.cs" />
@@ -155,6 +157,9 @@
     <Compile Include="Pages\CodeInputAuthorizationPage.xaml.cs">
       <DependentUpon>CodeInputAuthorizationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\LightChatlistPage.xaml.cs">
+      <DependentUpon>LightChatlistPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LightStartPage.xaml.cs">
       <DependentUpon>LightStartPage.xaml</DependentUpon>
     </Compile>
@@ -168,8 +173,10 @@
       <DependentUpon>PhoneNumberInputAuthorizationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValueConverters\AvatarConverter.cs" />
     <Compile Include="ViewModels\AuthorizationRootViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\ChatlistViewModel.cs" />
     <Compile Include="ViewModels\CodeAuthorizationViewModel.cs" />
     <Compile Include="ViewModels\LightRootViewModel.cs" />
     <Compile Include="ViewModels\PasswordAuthorizationViewModel.cs" />
@@ -185,6 +192,7 @@
     <Content Include="Assets\icons8-SendApproveLight-96.png" />
     <Content Include="Assets\icons8-изображение-96.png" />
     <Content Include="Assets\App-Icon.jpg" />
+    <Content Include="Assets\icons8-пользователь-96.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -204,6 +212,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\CodeInputAuthorizationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LightChatlistPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,6 +253,10 @@
     <ProjectReference Include="..\LightApplication\LightApplication.csproj">
       <Project>{aa3b8b65-bf78-4368-be19-a9b8b78e4585}</Project>
       <Name>LightApplication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LightCachedRepositories\LightCachedRepositories.csproj">
+      <Project>{01A38065-063B-49CA-8ECB-18D358CBBA20}</Project>
+      <Name>LightCachedRepositories</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

@@ -29,7 +29,8 @@ namespace Light.LightSynchronizationServices
             {
                 _authorizationStateUpdatesDispatcher.SetAuthorizationState(GetAuthorizationStateFrom(authState));
             }
-            else if (_nextUpdatesHandler != null)
+
+            if (_nextUpdatesHandler != null)
             {
                 _nextUpdatesHandler.HandleUpdates(updates);
             }

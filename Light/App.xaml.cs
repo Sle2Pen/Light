@@ -3,6 +3,8 @@ using Light.LightAuthorizationStateUpdatesDispatcher;
 using Light.LightChatsRequests;
 using Light.LightChatsUpdatesHandler;
 using Light.LightConnectionUpdatesHandler;
+using Light.LightFileRequests;
+using Light.LightFileUpdatesHandler;
 using Light.LightInitialApplicationSettings;
 using Light.LightSynchronizationClient;
 using Light.LightSynchronizationServices;
@@ -10,7 +12,11 @@ using Light.LightUserUpdatesHandler;
 using Light.NavigationServices;
 using Light.Pages;
 using Light.ViewModels;
-using LightApplication.LightChatlistUpdatesDispatcher;
+using LightApplication.LightCachedDataRepositories;
+using LightApplication.LightFileRequests;
+using LightApplication.LightUpdates;
+using LightApplication.LightUseCases;
+using LightCachedRepositories.ChatsRepository;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,6 +48,12 @@ namespace Light
 
         INavigationService _authorizedUserNavigationService;
         //INavigationService _authorizationNavigationService;
+        LoadChatlistUseCase _loadChatlistUseCase;
+        LoadChatAvatarsUseCase _loadChatAvatarsUseCase;
+        IChatsRequests _chatsRequests;
+        IFilesRequests _filesRequests;
+        IChats _chats;
+        FileUpdatesDispatcher _fileUpdatesDispatcher;
 
 
         ISynchronizationClient _synchronizationClient;
@@ -49,8 +61,9 @@ namespace Light
 
         IUpdatesHandler _nullUpdatesHandler;
 
+        IUpdatesHandler _fileUpdatesHandler;
         IUpdatesHandler _chatsUpdatesHandler;
-        IChatlistUpdatesDispatcher _chatlistUpdatesDispatcher;
+        //IChatlistUpdatesDispatcher _chatlistUpdatesDispatcher;
 
         IUpdatesHandler _userUpdatesHandler;
         IUpdatesHandler _connectionUpdatesHandler;
@@ -79,12 +92,10 @@ namespace Light
         {
             _nullUpdatesHandler = new NullUpdatesHandler();
 
-            _chatlistUpdatesDispatcher = new ChatlistUpdatesDispatcher();
-            _chatsUpdatesHandler = new ChatsUpdatesHandler(
-                _chatlistUpdatesDispatcher,
-                _nullUpdatesHandler);
+            _fileUpdatesDispatcher = new FileUpdatesDispatcher();
+            _fileUpdatesHandler = new FileUpdatesHandler(_fileUpdatesDispatcher, _nullUpdatesHandler);
 
-            _userUpdatesHandler = new UserUpdatesHandler(_chatsUpdatesHandler);
+            _userUpdatesHandler = new UserUpdatesHandler(_fileUpdatesHandler);
             _connectionUpdatesHandler = new ConnectionUpdatesHandler(_userUpdatesHandler);//в конце надо будет решить удолить или оставить. скорее оставить - это NullObject 
 
             _authorizationStateUpdatesDispatcher = new AuthorizationStateUpdatesDispatcher(AuthorizationState.Empty());
@@ -175,40 +186,49 @@ namespace Light
 
         private async Task LoadAsync()
         {
-            var handler = new AuthorizationRequestHandler();
-            var request = new TdApi.LoadChats
-            {
-                ChatList = new TdApi.ChatListMain(),
-                Limit = 100
-            };
+            //var handler = new AuthorizationRequestHandler();
+            //var request = new TdApi.LoadChats
+            //{
+            //    ChatList = new TdApi.ChatListMain(),
+            //    Limit = 100
+            //};
 
-            _synchronizationClient.SendRequest(request, handler);
+            //_synchronizationClient.SendRequest(request, handler);
 
-            var result= await handler.Task;
-            
-            if (result.Result == RequestResultType.Success)
-            {
-                var getChatsHandler = new GetChatsRequestHandler();
-                var getChatsRequest = new TdApi.GetChats { Limit = 50 };
-                _synchronizationClient.SendRequest(getChatsRequest, getChatsHandler);
+            //var result= await handler.Task;
 
-                var getChatsResult = await getChatsHandler.Task;
-                var list = new List<DebugChatDto>();
+            //if (result.Result == RequestResultType.Success)
+            //{
+            //    var getChatsHandler = new GetChatsRequestHandler();
+            //    var getChatsRequest = new TdApi.GetChats { Limit = 50 };
+            //    _synchronizationClient.SendRequest(getChatsRequest, getChatsHandler);
 
-                foreach (var item in getChatsResult.IdCollection)
-                {
-                    var getChatInfoHandler = new GetChatRequestHandler();
-                    var getChatRequest = new TdApi.GetChat { ChatId=item };
+            //    var getChatsResult = await getChatsHandler.Task;
+            //    var list = new List<DebugChatDto>();
 
-                    _synchronizationClient.SendRequest(getChatRequest, getChatInfoHandler);
+            //    foreach (var item in getChatsResult.IdCollection)
+            //    {
+            //        var getChatInfoHandler = new GetChatRequestHandler();
+            //        var getChatRequest = new TdApi.GetChat { ChatId=item };
 
-                    var getChatResult = await getChatInfoHandler.Task;
+            //        _synchronizationClient.SendRequest(getChatRequest, getChatInfoHandler);
 
-                    list.Add(getChatResult);
-                }
+            //        var getChatResult = await getChatInfoHandler.Task;
 
-                _rootFrame.Content = new LightStartPage(list);
-            }
+            //        list.Add(getChatResult);
+            //    }
+
+            //_rootFrame.Content = new LightStartPage(list);
+            //}
+            _chatsRequests = new ChatsRequests(_synchronizationClient);
+            _filesRequests = new FilesRequests(_synchronizationClient);
+            _chats = new Chats();
+
+            _loadChatlistUseCase = new LoadChatlistUseCase(_chatsRequests,_chats);
+            _loadChatAvatarsUseCase = new LoadChatAvatarsUseCase(_filesRequests);
+            var chatlistVM = new ChatlistViewModel(_loadChatlistUseCase, _loadChatAvatarsUseCase, _fileUpdatesDispatcher);
+            _rootFrame.Content = new LightChatlistPage(chatlistVM);
+            await chatlistVM.InitializeAsync();
         }
 
         private void SetFrameRootContent(Page rootPage)

@@ -6,11 +6,9 @@ namespace Light.LightChatsRequests
     {
         protected override void SetInternalResult(TdApi.BaseObject @object)
         {
-            var chatIds = @object as TdApi.Chats;
-
             _result = new ChatsIdsCollectionResult
             {
-                IdCollection = chatIds.ChatIds
+                IdCollection = (@object as TdApi.Chats).ChatIds
             };
         }
     }
