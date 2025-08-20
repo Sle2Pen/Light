@@ -17,7 +17,7 @@ namespace LightDomain.Chats
         public long Id { get; set; }
         public string Title { get; set; }
         public Photo Miniature { get; set; }
-        public Photo RealPhoto { get; set; }
+        public Photo MaxAvailablePhoto { get; set; }
         ////        Аватарка(
         ////small
         ////,
@@ -38,7 +38,7 @@ namespace LightDomain.Chats
         ////public bool 
         ////По умолчанию без уведомлений
 
-        public int UnreadMessagesCount { get; set; }
+        //public int UnreadMessagesCount { get; set; }
         //public long LastReadIncomingMessageId { get; set; }
         ////last_read_inbox_message_id
         ////long

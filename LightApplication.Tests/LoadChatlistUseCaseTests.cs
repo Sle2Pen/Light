@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Light.LightChatsRequests;
-using LightApplication.LightCachedDataRepositories;
 using LightApplication.LightUseCases;
 using NUnit.Framework;
 
@@ -15,7 +14,7 @@ namespace LightApplication.Tests
         {
             var cachedChats = new EmptyChats();
             var chatRequests = new FakeChatsRequests();
-            var loadChatsUseCase = new LoadChatlistUseCase(chatRequests,cachedChats);
+            var loadChatsUseCase = new LoadChatlistUseCase(chatRequests);
 
             var chats = loadChatsUseCase.LoadInitialChatsAsync();
 
@@ -35,7 +34,7 @@ namespace LightApplication.Tests
         }
     }
 
-    public class EmptyChats:IChats
+    public class EmptyChats
     {
         public int Count
         {

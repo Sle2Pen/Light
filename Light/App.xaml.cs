@@ -1,25 +1,21 @@
-﻿using Light.LightAuthorizationRequests;
+﻿using Light.ApplicationSettings;
+using Light.LightAuthorizationRequests;
 using Light.LightAuthorizationStateUpdatesDispatcher;
 using Light.LightChatsRequests;
-using Light.LightChatsUpdatesHandler;
 using Light.LightConnectionUpdatesHandler;
 using Light.LightFileRequests;
 using Light.LightFileUpdatesHandler;
-using Light.LightInitialApplicationSettings;
-using Light.LightSynchronizationClient;
-using Light.LightSynchronizationServices;
 using Light.LightUserUpdatesHandler;
 using Light.NavigationServices;
 using Light.Pages;
+using Light.TdlibClient;
+using Light.TdlibUpdatesReceiver;
+using Light.UpdatesHandlers;
 using Light.ViewModels;
-using LightApplication.LightCachedDataRepositories;
 using LightApplication.LightFileRequests;
 using LightApplication.LightUpdates;
 using LightApplication.LightUseCases;
-using LightCachedRepositories.ChatsRepository;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -27,10 +23,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-
-using Td = Telegram.Td;
-using TdApi = Telegram.Td.Api;
 
 
 namespace Light
@@ -47,12 +39,13 @@ namespace Light
         //ILightApplication _coreApplication;
 
         INavigationService _authorizedUserNavigationService;
+
+        ApplicationNavigationService _applicationNavigationService;
         //INavigationService _authorizationNavigationService;
         LoadChatlistUseCase _loadChatlistUseCase;
         LoadChatAvatarsUseCase _loadChatAvatarsUseCase;
         IChatsRequests _chatsRequests;
         IFilesRequests _filesRequests;
-        IChats _chats;
         FileUpdatesDispatcher _fileUpdatesDispatcher;
 
 
@@ -222,13 +215,15 @@ namespace Light
             //}
             _chatsRequests = new ChatsRequests(_synchronizationClient);
             _filesRequests = new FilesRequests(_synchronizationClient);
-            _chats = new Chats();
 
-            _loadChatlistUseCase = new LoadChatlistUseCase(_chatsRequests,_chats);
+            _loadChatlistUseCase = new LoadChatlistUseCase(_chatsRequests);
             _loadChatAvatarsUseCase = new LoadChatAvatarsUseCase(_filesRequests);
-            var chatlistVM = new ChatlistViewModel(_loadChatlistUseCase, _loadChatAvatarsUseCase, _fileUpdatesDispatcher);
-            _rootFrame.Content = new LightChatlistPage(chatlistVM);
-            await chatlistVM.InitializeAsync();
+            _applicationNavigationService = new ApplicationNavigationService(
+                _rootFrame, 
+                _loadChatlistUseCase, 
+                _loadChatAvatarsUseCase, 
+                _fileUpdatesDispatcher);
+            await _applicationNavigationService.NavigateToAsync<ChatlistViewModel>();
         }
 
         private void SetFrameRootContent(Page rootPage)

@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="DataTemplateSelectors\MessagePreviewSelector.cs" />
     <Compile Include="LightFilesRequests\FilesRequests.cs" />
     <Compile Include="LightAuthorizationRequests\AuthorizationRequest.cs" />
     <Compile Include="LightAuthorizationRequests\AuthorizationRequestHandler.cs" />
@@ -140,13 +141,13 @@
     <Compile Include="LightChatsUpdatesHandler\ChatsUpdatesHandler.cs" />
     <Compile Include="LightConnectionUpdatesHandler\ConnectionUpdatesHandler.cs" />
     <Compile Include="LightFileUpdatesHandler\FileUpdatesHandler.cs" />
-    <Compile Include="LightInitialApplicationSettings\LightSettings.cs" />
-    <Compile Include="LightSynchronizationClient\ISynchronizationClient.cs" />
-    <Compile Include="LightSynchronizationClient\SynchronizationClient.cs" />
-    <Compile Include="LightSynchronizationServices\AuthorizationUpdatesHandler.cs" />
-    <Compile Include="LightSynchronizationServices\IUpdatesHandler.cs" />
-    <Compile Include="LightSynchronizationServices\NullUpdatesHandler.cs" />
-    <Compile Include="LightSynchronizationServices\UpdatesReceiver.cs" />
+    <Compile Include="ApplicationSettings\LightSettings.cs" />
+    <Compile Include="TdlibClient\ISynchronizationClient.cs" />
+    <Compile Include="TdlibClient\SynchronizationClient.cs" />
+    <Compile Include="UpdatesHandlers\AuthorizationUpdatesHandler.cs" />
+    <Compile Include="UpdatesHandlers\IUpdatesHandler.cs" />
+    <Compile Include="UpdatesHandlers\NullUpdatesHandler.cs" />
+    <Compile Include="TdlibUpdatesReceiver\UpdatesReceiver.cs" />
     <Compile Include="LightUserUpdatesHandler\UserUpdatesHandler.cs" />
     <Compile Include="NavigationServices\ApplicationNavigationService.cs" />
     <Compile Include="NavigationServices\AuthorizationNavigationService.cs" />
@@ -159,6 +160,9 @@
     </Compile>
     <Compile Include="Pages\LightChatlistPage.xaml.cs">
       <DependentUpon>LightChatlistPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LightChatPage.xaml.cs">
+      <DependentUpon>LightChatPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\LightStartPage.xaml.cs">
       <DependentUpon>LightStartPage.xaml</DependentUpon>
@@ -174,6 +178,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValueConverters\AvatarConverter.cs" />
+    <Compile Include="ValueConverters\MessageStateVisibilityConverter.cs" />
+    <Compile Include="ValueConverters\MessageTimeConverter.cs" />
+    <Compile Include="ValueConverters\MiniatureBitmapConverter.cs" />
     <Compile Include="ViewModels\AuthorizationRootViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ChatlistViewModel.cs" />
@@ -189,10 +196,12 @@
     <None Include="Light_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\icons8-double-tick-96.png" />
     <Content Include="Assets\icons8-SendApproveLight-96.png" />
     <Content Include="Assets\icons8-изображение-96.png" />
     <Content Include="Assets\App-Icon.jpg" />
     <Content Include="Assets\icons8-пользователь-96.png" />
+    <Content Include="Assets\icons8-сердце-96-light.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -216,6 +225,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\LightChatlistPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LightChatPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -259,6 +272,7 @@
       <Name>LightCachedRepositories</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using LightApplication.LightCachedDataRepositories;
+using LightApplication.CachedDataRepositories;
 using LightApplication.LightUpdates;
 using LightApplication.LightUseCases;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LightApplication.LightChatsRequests;
+using System.Collections.Generic;
 using TdApi = Telegram.Td.Api;
 
 namespace Light.LightChatsRequests
@@ -9,17 +10,31 @@ namespace Light.LightChatsRequests
         {
             var chat = @object as TdApi.Chat;
 
-            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(chat.LastMessage.Date);
-            DateTime dateTime = dateTimeOffset.UtcDateTime.ToLocalTime();
-
             _result = new ChatRequestResult
             {
                 Id = chat.Id,
                 Title = chat.Title,
                 IsContainPhoto=false,
-                LastMessageDate = dateTime.ToString("dd MMMMMMM"),
-                LastMessageTime = dateTime.ToString("HH:mm")
+                UnreadCount=chat.UnreadCount,
+                UnreadMentionCount=chat.UnreadMentionCount,
+                UnreadReactionCount=chat.UnreadReactionCount
             };
+
+            if (chat.LastMessage != null)
+            {
+                //_result.LastMessageTime = chat.LastMessage.Date;//проверить,а бывает ли lastMessage==null
+                _result.IsOutgoingMessage = chat.LastMessage.IsOutgoing;
+                _result.LastMessage = new MessageResult
+                {
+                    Id = chat.LastMessage.Id,
+                    ChatId = chat.LastMessage.ChatId,
+                    //SenderUserId=chat.MessageSenderId,
+                    Date = chat.LastMessage.Date,
+                    EditDate = chat.LastMessage.EditDate,
+                    IsContainUnreadMentions = chat.LastMessage.ContainsUnreadMention,
+                    MessageContent = GetLastMessageContent(chat.LastMessage.Content)
+                };
+            }
 
             if (chat.Photo != null)
             {
@@ -33,71 +48,226 @@ namespace Light.LightChatsRequests
             }
         }
 
-        private string GetLastMessagePreview(TdApi.Message message)
+        private object GetLastMessageContent(TdApi.MessageContent content)
         {
-            string lastMessageContentPreview = string.Empty;
 
-            if (message.IsOutgoing)
+            //if (message.IsOutgoing)
+            //{
+            //    lastMessageContentPreview = "Вы: ";
+            //}
+            
+               
+                ////case TdApi.MessageVideo video:
+                ////    lastMessageContentPreview += "Видос";
+                ////    break;
+                ////case TdApi.MessageVoiceNote voiceNote:
+                ////    lastMessageContentPreview += "Голосовуха";
+                ////    break;
+                ////case TdApi.MessageSticker sticker:
+                ////    lastMessageContentPreview += $"Стикер: {sticker.Sticker}";
+                ////    break;
+                ////case TdApi.MessageAnimatedEmoji emoji://позже переработать
+                ////    lastMessageContentPreview += $"Эмодзя: {emoji.Emoji}";
+                ////    break;
+                ////case TdApi.MessageDocument document:
+                ////    lastMessageContentPreview += $"Документ: {document.Document.FileName}";
+                ////    break;
+                ////case TdApi.MessageCall call:
+                ////    if (call.DiscardReason is TdApi.CallDiscardReasonMissed)
+                ////    {
+                ////        lastMessageContentPreview += "Пропущенный звонок";
+                ////    }
+                ////    else
+                ////    {
+                ////        lastMessageContentPreview += "Звонок";
+                ////    }
+                ////    break;
+
+                ////case TdApi.MessagePinMessage pinnedMessage:
+                ////        lastMessageContentPreview += "Закрепленное сообщение";
+                ////    break;
+
+                ////case TdApi.MessageVideoNote videoNote:
+                ////        lastMessageContentPreview += "Видео сообщение";
+                ////    break;
+
+                ////case TdApi.MessageLocation location: 
+                ////        lastMessageContentPreview += "Локация";
+                ////    break;
+
+                ////case TdApi.MessageContact contact: 
+                ////        lastMessageContentPreview += "Контакт";
+                ////    break;
+
+            if(content is TdApi.MessageText text) 
+                {
+
+                var textContent = new TextContent
+                {
+                    Text = text.Text.Text
+                };
+
+                if (text.Text.Entities != null)
+                {
+                    var list = new List<FormattedFragmentDescriptor>();
+                    textContent.TableOfFragments = list;
+
+                    foreach (var item in text.Text.Entities)
+                    {
+                        var fmt = new FormattedFragmentDescriptor
+                        {
+                            Offset = item.Offset,
+                            Length = item.Length
+                        };
+
+                        switch (item.Type)
+                        {
+                            case TdApi.TextEntityTypeBold b:
+                                fmt.Format = FormatType.Bold;
+                                break;
+                            case TdApi.TextEntityTypeHashtag ht:
+                                fmt.Format = FormatType.Hashtag;
+                                break;
+                        }
+
+                        list.Add(fmt);
+                    }
+                }
+
+                return textContent;
+            }
+            
+            if(content is TdApi.MessagePhoto photo)
             {
-                lastMessageContentPreview = "Вы: ";
+                var photoContent = new PhotoContent
+                {
+                    IsSecret = photo.IsSecret,
+                    Caption=new TextContent()
+                };
+
+                if(string.IsNullOrEmpty(photo.Caption.Text))
+                {
+                    photoContent.Caption.Text = "Photo";
+                }
+                else
+                {
+                    photoContent.Caption.Text = photo.Caption.Text;
+
+                    if (photo.Caption.Entities != null)
+                    {
+                        var list = new List<FormattedFragmentDescriptor>();
+
+                        foreach (var item in photo.Caption.Entities)
+                        {
+                            var fmt = new FormattedFragmentDescriptor
+                            {
+                                Offset = item.Offset,
+                                Length = item.Length
+                            };
+
+                            switch (item.Type)
+                            {
+                                case TdApi.TextEntityTypeBold b:
+                                    fmt.Format = FormatType.Bold;
+                                    break;
+                                case TdApi.TextEntityTypeHashtag ht:
+                                    fmt.Format = FormatType.Hashtag;
+                                    break;
+                            }
+
+                            list.Add(fmt);
+                        }
+
+
+                        photoContent.Caption.TableOfFragments = list;
+                    }
+                }
+
+                if(photo.Photo.Minithumbnail != null && photo.Photo.Minithumbnail.Data != null && photo.Photo.Minithumbnail.Data.Count != 0)
+                {
+                    photoContent.HasMiniature = true;
+
+                    photoContent.Miniature = new Miniature
+                    {
+                        Data = new byte[photo.Photo.Minithumbnail.Data.Count]
+                    };
+
+                    //for (int i=0;i< photo.Photo.Minithumbnail.Data.Count; i++)
+                    //{
+                    //    photoContent.Miniature.Data[i] = photo.Photo.Minithumbnail.Data[i];
+                    //}
+                    
+                }
+
+                return photoContent;
             }
 
-            switch (message.Content)
+            if (content is TdApi.MessageDocument document)
             {
-                case TdApi.MessageText text:
-                    lastMessageContentPreview += text.Text.Text;
-                    break;
-                case TdApi.MessagePhoto photo:
-                    lastMessageContentPreview += "Фотова";
-                    break;
-                case TdApi.MessageVideo video:
-                    lastMessageContentPreview += "Видос";
-                    break;
-                case TdApi.MessageVoiceNote voiceNote:
-                    lastMessageContentPreview += "Голосовуха";
-                    break;
-                case TdApi.MessageSticker sticker:
-                    lastMessageContentPreview += $"Стикер: {sticker.Sticker}";
-                    break;
-                case TdApi.MessageAnimatedEmoji emoji://позже переработать
-                    lastMessageContentPreview += $"Эмодзя: {emoji.Emoji}";
-                    break;
-                case TdApi.MessageDocument document:
-                    lastMessageContentPreview += $"Документ: {document.Document.FileName}";
-                    break;
-                case TdApi.MessageCall call:
-                    if (call.DiscardReason is TdApi.CallDiscardReasonMissed)
+                var documentContent = new DocumentContent
+                {
+                    Caption = new TextContent()
+                };
+
+                if (string.IsNullOrEmpty(document.Caption.Text))
+                {
+                    documentContent.Caption.Text = "Document";
+                }
+                else
+                {
+                    documentContent.Caption.Text = document.Caption.Text;
+
+                    if (document.Caption.Entities != null)
                     {
-                        lastMessageContentPreview += "Пропущенный звонок";
+                        var list = new List<FormattedFragmentDescriptor>();
+
+                        foreach (var item in document.Caption.Entities)
+                        {
+                            var fmt = new FormattedFragmentDescriptor
+                            {
+                                Offset = item.Offset,
+                                Length = item.Length
+                            };
+
+                            switch (item.Type)
+                            {
+                                case TdApi.TextEntityTypeBold b:
+                                    fmt.Format = FormatType.Bold;
+                                    break;
+                                case TdApi.TextEntityTypeHashtag ht:
+                                    fmt.Format = FormatType.Hashtag;
+                                    break;
+                            }
+
+                            list.Add(fmt);
+                        }
+
+                        documentContent.Caption.TableOfFragments = list;
                     }
-                    else
-                    {
-                        lastMessageContentPreview += "Звонок";
-                    }
-                    break;
+                }
 
-                case TdApi.MessagePinMessage pinnedMessage:
-                        lastMessageContentPreview += "Закрепленное сообщение";
-                    break;
+                //if (photo.Photo.Minithumbnail != null && photo.Photo.Minithumbnail.Data != null && photo.Photo.Minithumbnail.Data.Count != 0)
+                //{
+                //    photoContent.HasMiniature = true;
 
-                case TdApi.MessageVideoNote videoNote:
-                        lastMessageContentPreview += "Видео сообщение";
-                    break;
+                //    photoContent.Miniature = new Miniature();
 
-                case TdApi.MessageLocation location: 
-                        lastMessageContentPreview += "Локация";
-                    break;
+                //    photoContent.Miniature.Data = new byte[photo.Photo.Minithumbnail.Data.Count];
 
-                case TdApi.MessageContact contact: 
-                        lastMessageContentPreview += "Контакт";
-                    break;
+                //    for (int i = 0; i < photo.Photo.Minithumbnail.Data.Count; i++)
+                //    {
+                //        photoContent.Miniature.Data[i] = photo.Photo.Minithumbnail.Data[i];
+                //    }
 
-                default:
-                    lastMessageContentPreview += $"[{message.Content?.GetType().Name.Replace("Message", "")}]";
-                    break;
+                //}
+
+                return documentContent;
             }
 
-            return lastMessageContentPreview;
+            return new UnknownStringContent
+            {
+                UnknownContent = $"[{content?.GetType().Name.Replace("Message", "")}]"
+            };
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using TdApi = Telegram.Td.Api;
 using Td = Telegram.Td;
 
-namespace Light.LightSynchronizationClient
+namespace Light.TdlibClient
 {
     public interface ISynchronizationClient
     {

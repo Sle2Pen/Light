@@ -1,5 +1,5 @@
 ﻿using Light.LightAuthorizationRequests;
-using Light.LightSynchronizationClient;
+using Light.TdlibClient;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TdApi = Telegram.Td.Api;

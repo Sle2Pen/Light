@@ -1,12 +1,6 @@
-﻿using Light.LightSynchronizationServices;
-//using LightApplication.LightChatlistUpdatesDispatcher;
-using System;
-using System.Collections.Generic;
+﻿using Light.UpdatesHandlers;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TdApi=Telegram.Td.Api;
+using TdApi = Telegram.Td.Api;
 
 namespace Light.LightChatsUpdatesHandler
 {

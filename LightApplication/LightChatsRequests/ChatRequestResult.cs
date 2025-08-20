@@ -1,4 +1,6 @@
-﻿namespace Light.LightChatsRequests
+﻿using LightApplication.LightChatsRequests;
+
+namespace Light.LightChatsRequests
 {
     public class ChatRequestResult
     {
@@ -10,9 +12,13 @@
         public int RealPhotoId { get; set; }
         public string RealPhotoPath { get; set; }
         //public string ContentPreview { get; set; }
-        public string LastMessageDate { get; set; }
-        public string LastMessageTime { get; set; }
+        public int UnreadCount { get; set; }
+        public int UnreadMentionCount { get; set; }
+        public int UnreadReactionCount { get; set; }
+        public int LastMessageTime { get; set; }
+        public bool IsOutgoingMessage { get; set; }
+
+        public MessageResult LastMessage { get; set; }  
     }
-
-
+    
 }

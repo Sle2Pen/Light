@@ -1,6 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using Light.LightSynchronizationServices;
+﻿using System.Diagnostics;
+using Light.UpdatesHandlers;
 using TdApi = Telegram.Td.Api;
 
 namespace Light.LightUserUpdatesHandler

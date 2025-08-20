@@ -1,4 +1,5 @@
-﻿using Light.LightSynchronizationServices;
+﻿using Light.TdlibUpdatesReceiver;
+using Light.UpdatesHandlers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
 

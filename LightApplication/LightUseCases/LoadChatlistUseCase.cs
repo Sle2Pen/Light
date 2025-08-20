@@ -1,5 +1,5 @@
 ﻿using Light.LightChatsRequests;
-using LightApplication.LightCachedDataRepositories;
+using LightApplication.CachedDataRepositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,14 +8,11 @@ namespace LightApplication.LightUseCases
     public class LoadChatlistUseCase
     {
         private readonly IChatsRequests _chatsRequests;
-        private readonly IChats _chats;
 
         public LoadChatlistUseCase(
-            IChatsRequests chatsRequests,
-            IChats chats)
+            IChatsRequests chatsRequests)
         {
             _chatsRequests = chatsRequests;
-            _chats = chats;
         }
 
         public async Task<IEnumerable<ChatPreviewPresentation>> LoadInitialChatsAsync()
@@ -30,9 +27,22 @@ namespace LightApplication.LightUseCases
                 {
                     Id = item.Id,
                     Title = item.Title,
-                    IsContainPhoto=item.IsContainPhoto,
-                    LastMessageDate = item.LastMessageDate,
-                    LastMessageTime = item.LastMessageTime
+                    IsContainPhoto = item.IsContainPhoto,
+                    UnreadCount = item.UnreadCount,
+                    UnreadMentionCount = item.UnreadMentionCount,
+                    UnreadReactionCount = item.UnreadMentionCount,
+                    LastMessageTime = item.LastMessageTime,
+                    IsOutgoingMessage=item.IsOutgoingMessage,
+                    MessagePreview=new MessagePreviewPresentation
+                    {
+                        Id=item.LastMessage.Id,
+                        ChatId=item.Id,
+                        Date=item.LastMessage.Date,
+                        //EditDate=,
+                        IsOutgoing=item.LastMessage.IsOutgoing,
+                        SendingStatus=MessageSendingStatus.Delivered,
+                        PreviewContent=item.LastMessage.MessageContent//потом изменить эту херню
+                    }
                 };
                 
                 if (chat.IsContainPhoto)

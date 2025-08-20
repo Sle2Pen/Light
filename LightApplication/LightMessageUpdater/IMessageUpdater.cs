@@ -7,6 +7,6 @@ namespace LightApplication.LightMessageUpdater
 {
     public interface IMessageUpdater
     {
-        void TextMessageUpdate(TextMessageInfo messageInfo);
+        //void TextMessageUpdate(TextMessageInfo messageInfo);
     }
 }

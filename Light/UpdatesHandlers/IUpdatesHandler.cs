@@ -1,6 +1,6 @@
 ﻿using TdApi = Telegram.Td.Api;
 
-namespace Light.LightSynchronizationServices
+namespace Light.UpdatesHandlers
 {
     public interface IUpdatesHandler
     {

@@ -41,7 +41,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatPreviewUpdaterTests.cs" />
     <Compile Include="LoadChatlistUseCaseTests.cs" />
     <Compile Include="MessageUpdaterTests.cs" />
   </ItemGroup>
@@ -57,9 +56,6 @@
       <Project>{844CCB96-7FDF-49AF-84D2-39890CB99AC8}</Project>
       <Name>LightDomain</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

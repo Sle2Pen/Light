@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using TdApi = Telegram.Td.Api;
 
-namespace Light.LightSynchronizationServices
+namespace Light.UpdatesHandlers
 {
     public class NullUpdatesHandler : IUpdatesHandler
     {

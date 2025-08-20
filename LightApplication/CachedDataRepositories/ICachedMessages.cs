@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LightApplication.LightCachedDataRepositories
+namespace LightApplication.CachedDataRepositories
 {
-    public interface IChats
+    public interface ICachedMessages
     {
     }
 }

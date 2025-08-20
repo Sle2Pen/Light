@@ -1,8 +1,9 @@
-﻿using System.Threading;
+﻿using Light.UpdatesHandlers;
+using System.Threading;
 using Td = Telegram.Td;
 using TdApi = Telegram.Td.Api;
 
-namespace Light.LightSynchronizationServices
+namespace Light.TdlibUpdatesReceiver
 {
     public class UpdatesReceiver : Td.ClientResultHandler
     {
@@ -14,8 +15,6 @@ namespace Light.LightSynchronizationServices
             IUpdatesHandler updatesHandler = null)
         {
             _synchronizationContext = synchronizationContext;
-
-            //TdApi.UpdateFileAddedToDownloads chat; 
 
             if (updatesHandler != null)
             {

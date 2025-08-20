@@ -1,4 +1,4 @@
-﻿using Light.LightSynchronizationServices;
+﻿using Light.UpdatesHandlers;
 using System.Diagnostics;
 using TdApi = Telegram.Td.Api;
 

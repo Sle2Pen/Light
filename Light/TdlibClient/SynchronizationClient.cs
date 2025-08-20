@@ -1,37 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TdApi = Telegram.Td.Api;
 using Td = Telegram.Td;
 using System.Threading;
-using Light.LightInitialApplicationSettings;
+using Light.ApplicationSettings;
 
-namespace Light.LightSynchronizationClient
+namespace Light.TdlibClient
 {
     public class SynchronizationClient : ISynchronizationClient
     {
         private readonly LightSettings _lightSettings;
         private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly Td.ClientResultHandler _updateListener;
+        private readonly Td.ClientResultHandler _updatesReceiver;
 
         private Td.Client _client;
 
         public SynchronizationClient(
             LightSettings lightSettings,
             CancellationTokenSource cancellationTokenSource,
-            Td.ClientResultHandler updateListener)
+            Td.ClientResultHandler updatesReceiver)
         {
             _lightSettings = lightSettings;
             _cancellationTokenSource = cancellationTokenSource;
-            _updateListener = updateListener;
+            _updatesReceiver = updatesReceiver;
         }
 
         private void CreateClient()
         {
-            _client = Td.Client.Create(_updateListener);
+            _client = Td.Client.Create(_updatesReceiver);
             var request = SetClientRequestParameters();
 
             try
