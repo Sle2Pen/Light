@@ -1,7 +1,7 @@
 ﻿using Light.Pages;
 using Light.ViewModels;
 using LightApplication.LightUpdates;
-using LightApplication.LightUseCases;
+using LightApplication.UseCases;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;

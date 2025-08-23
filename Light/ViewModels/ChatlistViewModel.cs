@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using LightApplication.CachedDataRepositories;
+using LightApplication.CachedDataPresenters;
 using LightApplication.LightUpdates;
-using LightApplication.LightUseCases;
+using LightApplication.UseCases;
 
 namespace Light.ViewModels
 {

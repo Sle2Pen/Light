@@ -6,13 +6,47 @@ using TdApi = Telegram.Td.Api;
 
 namespace Light.LightChatsRequests
 {
-    public class ChatsRequests:IChatsRequests
+    public class ChatsRequests: IChatsRequests
     {
         private readonly ISynchronizationClient _synchronizationClientService;
 
         public ChatsRequests(ISynchronizationClient synchronizationClientService)
         {
             _synchronizationClientService = synchronizationClientService;
+        }
+
+        public async Task<ChatRequestResult> LoadChatFromTelegramAsync(long item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<IEnumerable<long>> LoadChatIdsFromTelegramAsync(int offset = 0, int limit = 50)
+        {
+            var loadHandler = new SimpleRequestHandler();
+            var request = new TdApi.LoadChats
+            {
+                ChatList = new TdApi.ChatListMain(),
+                Limit = limit
+            };
+
+            _synchronizationClientService.SendRequest(request, loadHandler);
+            var result = await loadHandler.Task;
+
+            if (result.Result == RequestResultType.Success)
+            {
+                
+
+                var getChatsHandler = new GetChatsRequestHandler();
+                var getChatsRequest = new TdApi.GetChats { Limit = 50 };
+                _synchronizationClientService.SendRequest(getChatsRequest, getChatsHandler);
+
+                var getChatsResult = await getChatsHandler.Task;
+
+                var list = new List<long>(getChatsResult.IdCollection);
+                return list;
+            }
+
+            return null;
         }
 
         public async Task<IEnumerable<ChatRequestResult>> LoadChatsFromTelegramAsync(int offset = 0, int limit = 50)

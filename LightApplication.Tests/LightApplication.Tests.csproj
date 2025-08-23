@@ -41,6 +41,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatlistLoaderTests.cs" />
     <Compile Include="LoadChatlistUseCaseTests.cs" />
     <Compile Include="MessageUpdaterTests.cs" />
   </ItemGroup>

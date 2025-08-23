@@ -9,8 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="LightChatService\" />
-    <Folder Include="LightChatsPresentationRepositories\" />
     <Folder Include="IncomingUpdates\" />
   </ItemGroup>
 

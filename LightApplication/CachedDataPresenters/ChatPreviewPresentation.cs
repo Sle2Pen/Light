@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LightApplication.CachedDataRepositories
+namespace LightApplication.CachedDataPresenters
 {
     public class ChatPreviewPresentation
     {
@@ -18,5 +18,7 @@ namespace LightApplication.CachedDataRepositories
         public int UnreadReactionCount { get; set; }
         public bool IsOutgoingMessage { get; set; }
         public MessagePreviewPresentation MessagePreview { get; set; }
+
+        public int OrderPosition { get; set; }
     }
 }

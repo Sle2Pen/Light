@@ -2,7 +2,7 @@
     x:Class="Light.Pages.LightChatlistPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:db="using:LightApplication.CachedDataRepositories"
+    xmlns:db="using:LightApplication.CachedDataPresenters"
     xmlns:tmp="using:LightApplication.LightChatsRequests"
     xmlns:tmpPreview="using:Light.LightChatsRequests"
     xmlns:converters="using:Light.ValueConverters"
@@ -30,12 +30,14 @@
                        FontSize="14"
                        Foreground="LightGray"
                        VerticalAlignment="Center"
-                       TextTrimming="CharacterEllipsis"/>
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,1,0,1"/>
         </DataTemplate>
 
         <DataTemplate x:Key="PhotoMessagePreview" 
                       x:DataType="tmp:PhotoContent">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,1,0,1">
                 <Rectangle Height="15"
                            Width="15"
                            Fill="AliceBlue"
@@ -55,7 +57,8 @@
 
         <DataTemplate x:Key="DocumentMessagePreview" 
                       x:DataType="tmp:DocumentContent">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,1,0,1">
                 <Rectangle Height="15"
                            Width="15"
                            Fill="AliceBlue"
@@ -79,7 +82,8 @@
                        FontSize="14"
                        Foreground="LightGray"
                        VerticalAlignment="Center"
-                       TextTrimming="CharacterEllipsis"/>
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,1,0,1"/>
         </DataTemplate>
 
         
@@ -110,7 +114,7 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                     <Setter Property="Padding" Value="0"/>
-                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Margin" Value="0,1,0,1"/>
                 </Style>
             </ListBox.ItemContainerStyle>
 
@@ -119,6 +123,8 @@
                     <Grid Margin="10,0,0,0"
                           Height="75"
                           HorizontalAlignment="Stretch">
+                          <!--BorderThickness="0,0,0,1"
+                          BorderBrush="{ThemeResource SystemAccentColor}">-->
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -192,52 +198,72 @@
 
 
                         <Grid x:Name="ReactionsAndMensionsPanel"
+                              Background="{ThemeResource SystemAccentColor}"
                             Grid.Column="3"
                                    Grid.Row="1"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Right"
-                                   Margin="15,0">
+                                   Margin="15,0"
+                              Padding="5"
+                              BorderThickness="1"
+                              BorderBrush="DimGray">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Rectangle Grid.Column="2"
-                                Fill="#378df0" 
-                                   Width="20" 
-                                   Height="20"
-                                    HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="2"
-                                       Text="{Binding UnreadCount}"
-                                       FontSize="12"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
                             
-                            <Image Grid.Column="1"
-                               Width="20"
-                               Height="20"
-                               Source="../Assets/icons8-сердце-96-light.png"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"
-                               Stretch="UniformToFill"/>
-                            <TextBlock Grid.Column="1"
+                            <StackPanel Grid.Column="0"
+                                        Orientation="Horizontal" 
+                                        Margin="5,0"
+                                        VerticalAlignment="Center">
+                                <Image Width="20"
+                                       Height="20"
+                                       Source="../Assets/icons8-at-sign-24.png"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Stretch="UniformToFill"
+                                       Margin="0,0,2,0" />
+                                <TextBlock Text="{Binding UnreadMentionCount }"
+                                           FontSize="12"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Margin="5,0">
+                                <Image Width="20"
+                                       Height="20"
+                                       Source="../Assets/icons8-сердце-96-light.png"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Stretch="UniformToFill"
+                                       Margin="0,0,2,0" />
+                                <TextBlock Grid.Column="1"
                                        Text="{Binding UnreadReactionCount}"
                                        FontSize="12"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"/>
+                            </StackPanel>
                             
-                            <Rectangle Grid.Column="0"
-                                Fill="#378df0" 
-                                   Width="20" 
-                                   Height="20" 
-                                    HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="0"
-                                       Text="{Binding UnreadMentionCount}"
+                            <StackPanel Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                       Margin="5,0">
+                                <Image Width="20"
+                                       Height="20"
+                                       Source="../Assets/icons8-сообщение-в-чате-96.png"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Stretch="UniformToFill"
+                                       Margin="0,0,2,0" />
+                                <TextBlock Text="{Binding UnreadCount}"
                                        FontSize="12"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"/>
+                            </StackPanel>
                         </Grid>
                     </Grid>
                 </DataTemplate>

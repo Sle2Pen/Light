@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LightApplication.CachedDataRepositories
+namespace LightApplication.CachedDataPresenters
 {
     public class MessagePreviewPresentation
     {

@@ -1,9 +1,9 @@
-﻿using LightApplication.CachedDataRepositories;
+﻿using LightApplication.CachedDataPresenters;
 using LightApplication.LightFileRequests;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LightApplication.LightUseCases
+namespace LightApplication.UseCases
 {
     public class LoadChatAvatarsUseCase
     {

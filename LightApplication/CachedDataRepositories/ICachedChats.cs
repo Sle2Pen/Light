@@ -6,5 +6,6 @@ namespace LightApplication.CachedDataRepositories
 {
     public interface ICachedChats
     {
+        int Count { get; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Light.LightChatsRequests;
-using LightApplication.CachedDataRepositories;
+using LightApplication.CachedDataPresenters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LightApplication.LightUseCases
+namespace LightApplication.UseCases
 {
     public class LoadChatlistUseCase
     {

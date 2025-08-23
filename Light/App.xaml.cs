@@ -14,7 +14,7 @@ using Light.UpdatesHandlers;
 using Light.ViewModels;
 using LightApplication.LightFileRequests;
 using LightApplication.LightUpdates;
-using LightApplication.LightUseCases;
+using LightApplication.UseCases;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

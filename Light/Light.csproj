@@ -142,6 +142,9 @@
     <Compile Include="LightConnectionUpdatesHandler\ConnectionUpdatesHandler.cs" />
     <Compile Include="LightFileUpdatesHandler\FileUpdatesHandler.cs" />
     <Compile Include="ApplicationSettings\LightSettings.cs" />
+    <Compile Include="Pages\LightRootPage.xaml.cs">
+      <DependentUpon>LightRootPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TdlibClient\ISynchronizationClient.cs" />
     <Compile Include="TdlibClient\SynchronizationClient.cs" />
     <Compile Include="UpdatesHandlers\AuthorizationUpdatesHandler.cs" />
@@ -163,9 +166,6 @@
     </Compile>
     <Compile Include="Pages\LightChatPage.xaml.cs">
       <DependentUpon>LightChatPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\LightStartPage.xaml.cs">
-      <DependentUpon>LightStartPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\LightStartupLoadingPage.xaml.cs">
       <DependentUpon>LightStartupLoadingPage.xaml</DependentUpon>
@@ -196,12 +196,14 @@
     <None Include="Light_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\icons8-at-sign-24.png" />
     <Content Include="Assets\icons8-double-tick-96.png" />
     <Content Include="Assets\icons8-SendApproveLight-96.png" />
     <Content Include="Assets\icons8-изображение-96.png" />
     <Content Include="Assets\App-Icon.jpg" />
     <Content Include="Assets\icons8-пользователь-96.png" />
     <Content Include="Assets\icons8-сердце-96-light.png" />
+    <Content Include="Assets\icons8-сообщение-в-чате-96.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -232,7 +234,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\LightStartPage.xaml">
+    <Page Include="Pages\LightRootPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

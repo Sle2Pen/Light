@@ -1,7 +1,5 @@
-﻿using Light.LightChatsRequests;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,14 +20,11 @@ namespace Light.Pages
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class LightStartPage : Page
+    public sealed partial class LightRootPage : Page
     {
-        public ObservableCollection<DebugChatDto> Chats { get; set; }
-
-        public LightStartPage(IEnumerable<DebugChatDto> chats)
+        public LightRootPage()
         {
             this.InitializeComponent();
-            Chats = new ObservableCollection<DebugChatDto>(chats);
         }
     }
 }

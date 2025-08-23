@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LightApplication.LightChatUpdater
+namespace LightApplication.UpdateDispatchers
 {
     public interface IChatUpdatesDispatcher
     {
+        void SendChatLoadedUpdate();
     }
 }

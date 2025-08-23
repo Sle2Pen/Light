@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Light.LightChatsRequests;
-using LightApplication.LightUseCases;
+using LightApplication.CachedDataRepositories;
+using LightApplication.UseCases;
 using NUnit.Framework;
 
 namespace LightApplication.Tests
@@ -28,13 +29,23 @@ namespace LightApplication.Tests
         {
         }
 
+        public Task<ChatRequestResult> LoadChatFromTelegramAsync(long item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IEnumerable<long>> LoadChatIdsFromTelegramAsync(int offset = 0, int limit = 50)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<IEnumerable<ChatRequestResult>> LoadChatsFromTelegramAsync(int offset = 0, int limit = 50)
         {
             throw new System.NotImplementedException();
         }
     }
 
-    public class EmptyChats
+    public class EmptyChats:ICachedChats
     {
         public int Count
         {
